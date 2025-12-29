@@ -351,7 +351,8 @@
     </div>
 
     <script>
-      const API_URL = "http://localhost:8080/api/aprovados";
+        // Usa URL relativa para funcionar com cloudflare/ngrok
+        const API_URL = '/api/aprovados';
       const form = document.getElementById("cadastroForm");
       const imagemInput = document.getElementById("imagem");
       const fileText = document.getElementById("fileText");
