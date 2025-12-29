@@ -1,0 +1,547 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Cadastro de Aprovados em Concursos</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        min-height: 100vh;
+        padding: 20px;
+      }
+
+      .container {
+        max-width: 800px;
+        margin: 0 auto;
+      }
+
+      .header {
+        text-align: center;
+        color: white;
+        margin-bottom: 30px;
+      }
+
+      .header h1 {
+        font-size: 2.5em;
+        margin-bottom: 10px;
+        text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+      }
+
+      .header p {
+        font-size: 1.1em;
+        opacity: 0.9;
+      }
+
+      .card {
+        background: white;
+        border-radius: 15px;
+        padding: 40px;
+        box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+        margin-bottom: 30px;
+      }
+
+      .form-group {
+        margin-bottom: 25px;
+      }
+
+      .form-group label {
+        display: block;
+        margin-bottom: 8px;
+        color: #333;
+        font-weight: 600;
+        font-size: 0.95em;
+      }
+
+      .form-group input,
+      .form-group textarea {
+        width: 100%;
+        padding: 12px 15px;
+        border: 2px solid #e0e0e0;
+        border-radius: 8px;
+        font-size: 1em;
+        transition: all 0.3s;
+        font-family: inherit;
+      }
+
+      .form-group input:focus,
+      .form-group textarea:focus {
+        outline: none;
+        border-color: #667eea;
+        box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+      }
+
+      .form-group textarea {
+        resize: vertical;
+        min-height: 100px;
+      }
+
+      .file-input-wrapper {
+        position: relative;
+        overflow: hidden;
+        display: inline-block;
+        width: 100%;
+      }
+
+      .file-input-wrapper input[type="file"] {
+        position: absolute;
+        left: -9999px;
+      }
+
+      .file-input-label {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 15px;
+        background: #f8f9fa;
+        border: 2px dashed #dee2e6;
+        border-radius: 8px;
+        cursor: pointer;
+        transition: all 0.3s;
+      }
+
+      .file-input-label:hover {
+        background: #e9ecef;
+        border-color: #667eea;
+      }
+
+      .file-input-label svg {
+        width: 24px;
+        height: 24px;
+        margin-right: 10px;
+        color: #667eea;
+      }
+
+      .file-name {
+        margin-top: 10px;
+        font-size: 0.9em;
+        color: #666;
+      }
+
+      .image-preview {
+        margin-top: 15px;
+        text-align: center;
+      }
+
+      .image-preview img {
+        max-width: 200px;
+        max-height: 200px;
+        border-radius: 8px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      }
+
+      .btn {
+        width: 100%;
+        padding: 15px;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        border: none;
+        border-radius: 8px;
+        font-size: 1.1em;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+      }
+
+      .btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+      }
+
+      .btn:active {
+        transform: translateY(0);
+      }
+
+      .btn:disabled {
+        opacity: 0.6;
+        cursor: not-allowed;
+      }
+
+      .alert {
+        padding: 15px 20px;
+        border-radius: 8px;
+        margin-bottom: 20px;
+        display: none;
+      }
+
+      .alert-success {
+        background: #d4edda;
+        color: #155724;
+        border: 1px solid #c3e6cb;
+      }
+
+      .alert-error {
+        background: #f8d7da;
+        color: #721c24;
+        border: 1px solid #f5c6cb;
+      }
+
+      .aprovados-list {
+        margin-top: 20px;
+      }
+
+      .aprovado-item {
+        background: #f8f9fa;
+        padding: 20px;
+        border-radius: 8px;
+        margin-bottom: 15px;
+        display: flex;
+        gap: 20px;
+        align-items: flex-start;
+      }
+
+      .aprovado-item img {
+        width: 80px;
+        height: 80px;
+        border-radius: 8px;
+        object-fit: cover;
+      }
+
+      .aprovado-info {
+        flex: 1;
+      }
+
+      .aprovado-info h3 {
+        color: #333;
+        margin-bottom: 8px;
+      }
+
+      .aprovado-info p {
+        color: #666;
+        margin-bottom: 5px;
+        font-size: 0.95em;
+      }
+
+      .btn-delete {
+        background: #dc3545;
+        color: white;
+        border: none;
+        padding: 8px 15px;
+        border-radius: 5px;
+        cursor: pointer;
+        font-size: 0.9em;
+      }
+
+      .btn-delete:hover {
+        background: #c82333;
+      }
+
+      .loading {
+        text-align: center;
+        padding: 20px;
+        color: #666;
+      }
+
+      @media (max-width: 600px) {
+        .card {
+          padding: 25px;
+        }
+
+        .header h1 {
+          font-size: 1.8em;
+        }
+
+        .aprovado-item {
+          flex-direction: column;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <div class="header">
+        <h1>🎓 Cadastro de Aprovados</h1>
+        <p>Sistema de registro de aprovados em concursos públicos</p>
+      </div>
+
+      <div class="card">
+        <div id="alertSuccess" class="alert alert-success"></div>
+        <div id="alertError" class="alert alert-error"></div>
+
+        <form id="cadastroForm">
+          <div class="form-group">
+            <label for="nome">Nome Completo *</label>
+            <input
+              type="text"
+              id="nome"
+              name="nome"
+              required
+              placeholder="Digite seu nome completo"
+            />
+          </div>
+
+          <div class="form-group">
+            <label for="email">E-mail *</label>
+            <input
+              type="email"
+              id="email"
+              name="email"
+              required
+              placeholder="seu@email.com"
+            />
+          </div>
+
+          <div class="form-group">
+            <label for="telefone">Telefone *</label>
+            <input
+              type="tel"
+              id="telefone"
+              name="telefone"
+              required
+              placeholder="(00) 00000-0000"
+            />
+          </div>
+
+          <div class="form-group">
+            <label for="concursosAprovados">Concursos Aprovados *</label>
+            <textarea
+              id="concursosAprovados"
+              name="concursosAprovados"
+              required
+              placeholder="Liste os concursos em que foi aprovado&#10;Exemplo:&#10;- TRF 1ª Região - Analista Judiciário (2023)&#10;- Polícia Federal - Agente (2022)"
+            ></textarea>
+          </div>
+
+          <div class="form-group">
+            <label for="imagem">Foto (opcional)</label>
+            <div class="file-input-wrapper">
+              <input type="file" id="imagem" name="imagem" accept="image/*" />
+              <label for="imagem" class="file-input-label">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"
+                  />
+                </svg>
+                <span id="fileText">Clique para selecionar uma foto</span>
+              </label>
+            </div>
+            <div id="fileName" class="file-name"></div>
+            <div id="imagePreview" class="image-preview"></div>
+          </div>
+
+          <button type="submit" class="btn" id="submitBtn">Cadastrar</button>
+        </form>
+      </div>
+
+      <div class="card">
+        <h2 style="margin-bottom: 20px; color: #333">
+          📋 Aprovados Cadastrados
+        </h2>
+        <div id="aprovadosList" class="aprovados-list">
+          <div class="loading">Carregando...</div>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      const API_URL = "http://localhost:8080/api/aprovados";
+      const form = document.getElementById("cadastroForm");
+      const imagemInput = document.getElementById("imagem");
+      const fileText = document.getElementById("fileText");
+      const fileName = document.getElementById("fileName");
+      const imagePreview = document.getElementById("imagePreview");
+      const submitBtn = document.getElementById("submitBtn");
+      const alertSuccess = document.getElementById("alertSuccess");
+      const alertError = document.getElementById("alertError");
+      const aprovadosList = document.getElementById("aprovadosList");
+
+      // Máscara de telefone
+      document
+        .getElementById("telefone")
+        .addEventListener("input", function (e) {
+          let value = e.target.value.replace(/\D/g, "");
+          if (value.length > 11) value = value.slice(0, 11);
+
+          if (value.length > 10) {
+            value = value.replace(/^(\d{2})(\d{5})(\d{4}).*/, "($1) $2-$3");
+          } else if (value.length > 6) {
+            value = value.replace(/^(\d{2})(\d{4})(\d{0,4}).*/, "($1) $2-$3");
+          } else if (value.length > 2) {
+            value = value.replace(/^(\d{2})(\d{0,5})/, "($1) $2");
+          } else {
+            value = value.replace(/^(\d*)/, "($1");
+          }
+
+          e.target.value = value;
+        });
+
+      // Preview da imagem
+      imagemInput.addEventListener("change", function (e) {
+        const file = e.target.files[0];
+        if (file) {
+          fileText.textContent = "Imagem selecionada";
+          fileName.textContent = file.name;
+
+          const reader = new FileReader();
+          reader.onload = function (e) {
+            imagePreview.innerHTML = `<img src="${e.target.result}" alt="Preview">`;
+          };
+          reader.readAsDataURL(file);
+        } else {
+          fileText.textContent = "Clique para selecionar uma foto";
+          fileName.textContent = "";
+          imagePreview.innerHTML = "";
+        }
+      });
+
+      // Submeter formulário
+      form.addEventListener("submit", async function (e) {
+        e.preventDefault();
+
+        const formData = new FormData();
+        formData.append("nome", document.getElementById("nome").value);
+        formData.append("email", document.getElementById("email").value);
+        formData.append("telefone", document.getElementById("telefone").value);
+        formData.append(
+          "concursosAprovados",
+          document.getElementById("concursosAprovados").value
+        );
+
+        const imagem = document.getElementById("imagem").files[0];
+        if (imagem) {
+          formData.append("imagem", imagem);
+        }
+
+        submitBtn.disabled = true;
+        submitBtn.textContent = "Cadastrando...";
+        hideAlerts();
+
+        try {
+          const response = await fetch(API_URL, {
+            method: "POST",
+            body: formData,
+          });
+
+          const data = await response.json();
+
+          if (response.ok && data.success) {
+            showSuccess(data.message);
+            form.reset();
+            fileText.textContent = "Clique para selecionar uma foto";
+            fileName.textContent = "";
+            imagePreview.innerHTML = "";
+            loadAprovados();
+          } else {
+            showError(data.message || "Erro ao cadastrar");
+          }
+        } catch (error) {
+          showError("Erro ao conectar com o servidor: " + error.message);
+        } finally {
+          submitBtn.disabled = false;
+          submitBtn.textContent = "Cadastrar";
+        }
+      });
+
+      // Carregar aprovados
+      async function loadAprovados() {
+        try {
+          const response = await fetch(API_URL);
+          const aprovados = await response.json();
+
+          if (aprovados.length === 0) {
+            aprovadosList.innerHTML =
+              '<p style="text-align: center; color: #666;">Nenhum aprovado cadastrado ainda.</p>';
+            return;
+          }
+
+          aprovadosList.innerHTML = aprovados
+            .map((aprovado) => {
+              const imagemUrl = aprovado.imagemNome
+                ? `${API_URL}/imagem/${aprovado.imagemNome}`
+                : 'data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><rect width="100" height="100" fill="%23ddd"/><text x="50" y="50" font-size="40" text-anchor="middle" dy=".3em" fill="%23999">?</text></svg>';
+
+              return `
+                        <div class="aprovado-item">
+                            <img src="${imagemUrl}" alt="${
+                aprovado.nome
+              }" onerror="this.src='data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><rect width=%22100%22 height=%22100%22 fill=%22%23ddd%22/><text x=%2250%22 y=%2250%22 font-size=%2240%22 text-anchor=%22middle%22 dy=%22.3em%22 fill=%22%23999%22>?</text></svg>'">
+                            <div class="aprovado-info">
+                                <h3>${aprovado.nome}</h3>
+                                <p><strong>E-mail:</strong> ${
+                                  aprovado.email
+                                }</p>
+                                <p><strong>Telefone:</strong> ${
+                                  aprovado.telefone
+                                }</p>
+                                <p><strong>Concursos:</strong></p>
+                                <p style="white-space: pre-line;">${
+                                  aprovado.concursosAprovados
+                                }</p>
+                                <p><strong>Cadastrado em:</strong> ${new Date(
+                                  aprovado.dataCadastro
+                                ).toLocaleString("pt-BR")}</p>
+                            </div>
+                            <button class="btn-delete" onclick="deletarAprovado(${
+                              aprovado.id
+                            })">🗑️ Deletar</button>
+                        </div>
+                    `;
+            })
+            .join("");
+        } catch (error) {
+          aprovadosList.innerHTML =
+            '<p style="text-align: center; color: #dc3545;">Erro ao carregar aprovados</p>';
+        }
+      }
+
+      // Deletar aprovado
+      async function deletarAprovado(id) {
+        if (!confirm("Tem certeza que deseja deletar este cadastro?")) {
+          return;
+        }
+
+        try {
+          const response = await fetch(`${API_URL}/${id}`, {
+            method: "DELETE",
+          });
+
+          if (response.ok) {
+            showSuccess("Cadastro deletado com sucesso!");
+            loadAprovados();
+          } else {
+            showError("Erro ao deletar cadastro");
+          }
+        } catch (error) {
+          showError("Erro ao conectar com o servidor");
+        }
+      }
+
+      function showSuccess(message) {
+        alertSuccess.textContent = message;
+        alertSuccess.style.display = "block";
+        setTimeout(() => (alertSuccess.style.display = "none"), 5000);
+      }
+
+      function showError(message) {
+        alertError.textContent = message;
+        alertError.style.display = "block";
+        setTimeout(() => (alertError.style.display = "none"), 5000);
+      }
+
+      function hideAlerts() {
+        alertSuccess.style.display = "none";
+        alertError.style.display = "none";
+      }
+
+      // Carregar aprovados ao iniciar
+      loadAprovados();
+    </script>
+  </body>
+</html>
