@@ -13,8 +13,8 @@ spring.jpa.hibernate.ddl-auto=update
 spring.jpa.show-sql=true
 spring.jpa.properties.hibernate.format_sql=true
 
-# Console H2 (acessível em http://localhost:8080/h2-console)
-spring.h2.console.enabled=true
+# Console H2 - DESABILITAR EM PRODUÇÃO/TESTES EXTERNOS
+spring.h2.console.enabled=false
 spring.h2.console.path=/h2-console
 
 # Configurações de Upload de Arquivos
@@ -24,6 +24,12 @@ spring.servlet.multipart.max-request-size=10MB
 
 # Diretório para salvar uploads
 upload.path=uploads
+
+# Autenticação HTTP Basic (Proteção contra acessos não autorizados)
+# IMPORTANTE: Altere estas credenciais antes de expor a aplicação!
+app.auth.enabled=true
+app.auth.username=admin
+app.auth.password=ALTERE_ESTA_SENHA
 
 # Logging
 logging.level.org.springframework.web=INFO

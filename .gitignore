@@ -66,6 +66,10 @@ out/
 # Spring Boot
 spring-boot-devtools.properties
 
+# Application properties com senhas (manter local apenas)
+# Comente a linha abaixo se quiser versionar as configurações
+application.properties
+
 # H2 Database files
 data/
 *.mv.db
@@ -81,3 +85,9 @@ Thumbs.db
 # Logs
 logs/
 *.log
+
+# ngrok/cloudflared downloads
+ngrok-*.tgz
+cloudflared-*.deb
+ngrok
+cloudflared
